@@ -17,7 +17,7 @@ class ProntuarioController extends Controller
         $prontuario = $this->prontuarioService->create($request->toDTO());
 
         return response([
-            'id' => $prontuario->id,
+            'id' => $prontuario->getId(),
         ], 201);
     }
 }
