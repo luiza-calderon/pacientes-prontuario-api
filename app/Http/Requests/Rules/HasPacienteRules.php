@@ -13,13 +13,13 @@ trait HasPacienteRules
                 'string',
                 'max:150',
                 'min:2',
-                $required ? 'required' : 'nullable',
+                $required ? 'required' : 'nullable'
             ],
             $prefix . 'data_nascimento' => [
-                'date',
+                'date_format:Y-m-d',
                 'before_or_equal:' . today(),
-                $required ? 'required' : 'nullable',
-            ],
+                $required ? 'required' : 'nullable'
+            ]
         ];
     }
 }

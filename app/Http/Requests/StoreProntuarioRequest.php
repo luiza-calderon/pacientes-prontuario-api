@@ -2,10 +2,14 @@
 
 namespace App\Http\Requests;
 
+use App\DTOs\CreatePacienteDTO;
+use App\DTOs\CreateTelefoneDTO;
+use App\DTOs\StoreProntuarioRequestDTO;
 use App\Http\Requests\Rules\HasContatoRules;
 use App\Http\Requests\Rules\HasPacienteRules;
 use App\Http\Requests\Rules\HasTelefoneRules;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Carbon;
 
 class StoreProntuarioRequest extends FormRequest
 {
@@ -24,16 +28,34 @@ class StoreProntuarioRequest extends FormRequest
                 'dia_semana_atendimento' => [
                     'required',
                     'string',
-                    'in:SEG,TER,QUA,QUI,SEX,SAB',
+                    'in:SEG,TER,QUA,QUI,SEX,SAB'
                 ],
                 'horario_atendimento' => [
                     'required',
-                    'date_format:H:i:s',
-                ],
+                    'date_format:H:i:s'
+                ]
             ],
             $this->pacienteRules(required: true),
             $this->contatoRules(prefix: 'paciente.contato.', required: true),
-            $this->telefoneRules(prefix: 'paciente.contato.', required: true),
+            $this->telefoneRules(prefix: 'paciente.contato.', required: true)
+        );
+    }
+
+    public function toDTO(): StoreProntuarioRequestDTO
+    {
+        $validatedRequest = $this->validated();
+
+        return new StoreProntuarioRequestDTO(
+            $validatedRequest['dia_semana_atendimento'],
+            Carbon::createFromFormat('H:i:s', $validatedRequest['horario_atendimento']),
+            new CreatePacienteDTO(
+                $validatedRequest['paciente']['nome'],
+                Carbon::createFromFormat('Y-m-d', $validatedRequest['paciente']['data_nascimento']),
+                new CreateTelefoneDTO(
+                    $validatedRequest['paciente']['contato']['ddd'],
+                    $validatedRequest['paciente']['contato']['numero']
+                )
+            )
         );
     }
 }

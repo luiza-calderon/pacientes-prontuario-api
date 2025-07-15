@@ -3,38 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreProntuarioRequest;
-use App\Models\Paciente;
-use App\Models\Prontuario;
-use App\Models\Telefone;
-use Illuminate\Support\Facades\DB;
+use App\Services\Interfaces\ProntuarioServiceInterface;
 
 class ProntuarioController extends Controller
 {
+    public function __construct(
+        private ProntuarioServiceInterface $prontuarioService
+    ) {
+    }
+
     public function store(StoreProntuarioRequest $request)
     {
-        $validatedRequest = $request->validated();
-
-        $prontuario = DB::transaction(function () use ($validatedRequest) {
-            $paciente = Paciente::create([
-                'nome' => $validatedRequest['paciente']['nome'],
-                'data_nascimento' => $validatedRequest['paciente']['data_nascimento'],
-            ]);
-    
-            Telefone::create([
-                'ddd' => $validatedRequest['paciente']['contato']['ddd'],
-                'numero' => $validatedRequest['paciente']['contato']['numero'],
-            ])->contato()->create([
-                'paciente_id' => $paciente->id,
-            ]);
-    
-            $prontuario = Prontuario::create([
-                'dia_semana_atendimento' => $validatedRequest['dia_semana_atendimento'],
-                'horario_atendimento' => $validatedRequest['horario_atendimento'],
-                'paciente_id' => $paciente->id,
-            ]);
-
-            return $prontuario;
-        });
+        $prontuario = $this->prontuarioService->create($request->toDTO());
 
         return response([
             'id' => $prontuario->id,
