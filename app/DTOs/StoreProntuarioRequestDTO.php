@@ -2,13 +2,12 @@
 
 namespace App\DTOs;
 
-use DateTime;
 
 class StoreProntuarioRequestDTO
 {
     public function __construct(
         protected readonly string $dia_semana_atendimento,
-        protected readonly DateTime $horario_atendimento,
+        protected readonly string $horario_atendimento,
         protected readonly CreatePacienteDTO $paciente
     ) {
     }
@@ -20,7 +19,7 @@ class StoreProntuarioRequestDTO
 
     public function getHorarioAtendimento(): string
     {
-        return $this->horario_atendimento->format('H:i:s');
+        return $this->horario_atendimento;
     }
 
     public function getPaciente(): CreatePacienteDTO
@@ -35,7 +34,7 @@ class StoreProntuarioRequestDTO
 
     public function getPacienteDataNascimento(): string
     {
-        return $this->getPaciente()->getDataNascimento()->format('Y-m-d');
+        return $this->getPaciente()->getDataNascimento();
     }
 
     public function getPacienteContato(): CreateTelefoneDTO

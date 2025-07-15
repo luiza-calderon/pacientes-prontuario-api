@@ -10,7 +10,7 @@ class Prontuario extends Model
     protected $fillable = [
         'dia_semana_atendimento',
         'horario_atendimento',
-        'paciente_id',
+        'paciente_id'
     ];
 
     public function paciente(): BelongsTo

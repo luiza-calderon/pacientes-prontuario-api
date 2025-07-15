@@ -8,7 +8,7 @@ class CreatePacienteDTO
 {
     public function __construct(
         protected readonly string $nome,
-        protected readonly DateTime $data_nascimento,
+        protected readonly string $data_nascimento,
         protected readonly CreateTelefoneDTO $contato
     ) {
     }
@@ -18,7 +18,7 @@ class CreatePacienteDTO
         return $this->nome;
     }
 
-    public function getDataNascimento(): DateTime
+    public function getDataNascimento(): string
     {
         return $this->data_nascimento;
     }

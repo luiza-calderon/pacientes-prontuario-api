@@ -9,7 +9,6 @@ use App\Http\Requests\Rules\HasContatoRules;
 use App\Http\Requests\Rules\HasPacienteRules;
 use App\Http\Requests\Rules\HasTelefoneRules;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Carbon;
 
 class StoreProntuarioRequest extends FormRequest
 {
@@ -47,10 +46,10 @@ class StoreProntuarioRequest extends FormRequest
 
         return new StoreProntuarioRequestDTO(
             $validatedRequest['dia_semana_atendimento'],
-            Carbon::createFromFormat('H:i:s', $validatedRequest['horario_atendimento']),
+            $validatedRequest['horario_atendimento'],
             new CreatePacienteDTO(
                 $validatedRequest['paciente']['nome'],
-                Carbon::createFromFormat('Y-m-d', $validatedRequest['paciente']['data_nascimento']),
+                $validatedRequest['paciente']['data_nascimento'],
                 new CreateTelefoneDTO(
                     $validatedRequest['paciente']['contato']['ddd'],
                     $validatedRequest['paciente']['contato']['numero']
